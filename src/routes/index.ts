@@ -1,5 +1,8 @@
-import express from 'express';
+import { Router } from 'express';
+import urlRoutes from '../modules/url/routes/url.routes';
 
-const router = express.Router();
+const router = Router();
+
+router.use('/urls', urlRoutes);
 
 export default router;
