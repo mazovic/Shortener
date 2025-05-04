@@ -162,4 +162,52 @@ router.post(
 
 router.get('/', urlController.findAll.bind(urlController));
 
+/**
+ * @swagger
+ * /api/urls/{shortUrl}:
+ *   get:
+ *     summary: Get details of the original URL by its shortened code
+ *     description: Retrieves the full URL and associated metadata using the shortened URL identifier
+ *     tags: [URLs]
+ *     parameters:
+ *       - in: path
+ *         name: shortUrl
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The shortened URL identifier
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the original URL data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiResponse'
+ *             example:
+ *               status: 'success'
+ *               data:
+ *                 id: '550e8400-e29b-41d4-a716-446655440000'
+ *                 shortUrl: 'abc123'
+ *                 originalUrl: 'https://www.example.com/very/long/path/that/needs/shortening'
+ *                 visitCount: 1
+ *                 createdAt: '2023-06-15T10:30:00.000Z'
+ *                 lastVisitedAt: '2023-06-16T12:45:00.000Z'
+ *       404:
+ *         description: Shortened URL not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: 'error'
+ *                 message:
+ *                   type: string
+ *                   example: 'URL not found'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+
+router.get('/:shortUrl', urlController.findByShortUrl.bind(urlController));
 export default router;

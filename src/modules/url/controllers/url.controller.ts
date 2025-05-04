@@ -17,9 +17,31 @@ export class UrlController {
   async findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const urls = await urlService.findAll();
-      res.status(201).json({
+      res.status(200).json({
         status: 'success',
         data: urls,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async findByShortUrl(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { shortUrl } = req.params;
+      const url = await urlService.findByShortUrl(shortUrl);
+
+      if (!url) {
+        res.status(404).json({
+          status: 'error',
+          message: 'URL not found',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: url,
       });
     } catch (error) {
       next(error);

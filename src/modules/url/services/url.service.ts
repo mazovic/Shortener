@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '../../../db';
 import { urls } from '../../../db/schema/url.schema';
 import { generateShortUrl } from '../../../utils/generateShortUrl';
@@ -28,6 +28,30 @@ export class UrlService {
 
   async findAll(): Promise<UrlObj[]> {
     return await db.select().from(urls);
+  }
+
+  async findByShortUrl(shortUrl: string): Promise<UrlObj | null> {
+    const [result] = await db.select().from(urls).where(eq(urls.shortUrl, shortUrl)).limit(1);
+
+    if (!result) {
+      return null;
+    }
+
+    const updatedUrl = await this.incrementVisitCount(result.id);
+    return updatedUrl;
+  }
+
+  private async incrementVisitCount(id: string): Promise<UrlObj> {
+    const [updatedUrl] = await db
+      .update(urls)
+      .set({
+        visitCount: sql.raw('"visit_count" + 1'),
+        lastVisitedAt: new Date(),
+      })
+      .where(eq(urls.id, id))
+      .returning();
+
+    return updatedUrl;
   }
 }
 
