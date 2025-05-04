@@ -13,6 +13,18 @@ export class UrlController {
       next(error);
     }
   }
+
+  async findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const urls = await urlService.findAll();
+      res.status(201).json({
+        status: 'success',
+        data: urls,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const urlController = new UrlController();

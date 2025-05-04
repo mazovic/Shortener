@@ -134,4 +134,32 @@ router.post(
   urlController.createShortUrl.bind(urlController),
 );
 
+/**
+ * @swagger
+ * /api/urls:
+ *   get:
+ *     summary: Retrieve all shortened URLs
+ *     description: Returns a list of all URLs that have been shortened
+ *     tags: [URLs]
+ *     responses:
+ *       200:
+ *         description: A list of shortened URLs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/UrlObj'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+
+router.get('/', urlController.findAll.bind(urlController));
+
 export default router;

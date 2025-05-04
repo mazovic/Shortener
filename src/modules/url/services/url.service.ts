@@ -25,6 +25,10 @@ export class UrlService {
 
     return result;
   }
+
+  async findAll(): Promise<UrlObj[]> {
+    return await db.select().from(urls);
+  }
 }
 
 export const urlService = new UrlService();
